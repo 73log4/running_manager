@@ -1,4 +1,4 @@
-VERSION = "0.0.1"
+VERSION = "0.0.2"
 
 
 MSG_WELCOME = f"\n--- [ Welcome to the Running Manager {VERSION} ] ---"
