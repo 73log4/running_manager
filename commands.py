@@ -58,7 +58,7 @@ def delete_command(manager: RunningManager):
         print(MSG_INVALID_DATE)
         return
 
-    check = input(MSG_DELETE_CHECK + date + "(y/n): ")
+    check = input(MSG_DELETE_CHECK + date + " (y/n): ")
     if check != 'y':
         print(MSG_DELETE_NO_CHANGE)
         return
