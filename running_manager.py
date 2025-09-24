@@ -12,6 +12,7 @@ class ManagerCMD(Enum):
     Edit = 3
     Backup = 4
     Delete = 5
+    PrintSmart = 6,
 
 
 CMD_TABLE = {
@@ -21,6 +22,7 @@ CMD_TABLE = {
     "edit": ManagerCMD.Edit,
     "backup": ManagerCMD.Backup,
     "delete": ManagerCMD.Delete,
+    "print smart": ManagerCMD.PrintSmart,
 }
 
 
@@ -30,6 +32,7 @@ CMD_FUNC = {
     ManagerCMD.Edit: edit_command,
     ManagerCMD.Backup: backup_command,
     ManagerCMD.Delete: delete_command,
+    ManagerCMD.PrintSmart: print_smart_command,
 }
 
 

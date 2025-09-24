@@ -88,11 +88,11 @@ class RunningManager:
         self.save_changes(backup_path)
 
     def add_run(self, date: str, km: float, time: str, terrain: str, elev: int):
-        time = format_str_to_time(time)
-        pace = math.ceil(time / km)
+        new_time = format_str_to_time(time)
+        pace = math.ceil(new_time / km)
         calories = None
 
-        run = Run(date, km, time, pace, terrain, elev, calories)
+        run = Run(date, km, new_time, pace, terrain, elev, calories)
 
         self.runs[run.date] = run
         if date not in self.dates:
@@ -120,4 +120,26 @@ class RunningManager:
         for date in self.dates[-last:]:
             summary += self.get_run_str(date) + '\n'
         return summary
+    
+    def get_smart_summary(self, filter_type: str, filter_value: str, sort_key="date") -> str:
+        if sort_key == "km":
+            key_func = lambda d: self.runs[d].kilometers
+        elif sort_key == "pace":
+            key_func = lambda d: -self.runs[d].pace
+        elif sort_key == "date":
+            key_func = lambda d: d
+
+        if filter_type == "none":
+            filter_func = lambda d: "none"
+        if filter_type == "location":
+            filter_func = lambda d: self[d].terrain
+        elif filter_type == "km":
+            filter_func = lambda d: str(round(self[d].kilometers))
+
+        summary = '\n' + self.get_table_heading() + '\n'
+        for date in sorted(self.dates, key=key_func):
+            if filter_func(date) == filter_value:
+                summary += self.get_run_str(date) + '\n'
+        return summary
+    
 

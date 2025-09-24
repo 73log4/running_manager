@@ -65,3 +65,21 @@ def delete_command(manager: RunningManager):
 
     manager.delete_run(date)
     print(MSG_DELETE_SUCCESS)
+
+def print_smart_command(manager: RunningManager):
+    filter_type = input(MSG_ENTER_FILTER_TYPE)
+    if filter_type not in ["km", "location", "none"]:
+        print(MSG_FILTER_TYPE_NOT_EXISTS)
+        return
+
+    if filter_type != "none":
+        filter_value = input(MSG_ENTER_FILTER_VALUE)
+    else:
+        filter_value = "none"
+
+    sort_key = input(MSG_ENTER_SORT_KEY)
+    if sort_key not in ["km", "pace", "date"]:
+        print(MSG_SORT_KEY_NOT_EXISTS)
+        return
+
+    print(manager.get_smart_summary(filter_type, filter_value, sort_key))
