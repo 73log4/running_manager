@@ -5,8 +5,8 @@ import math
 import datetime
 
 
-TABLE_HEADING_STR = ("{0:^12} | {1:^8} | {2:^8} | {3:^8} | {4:^30} | {5:^8} | {6:^8}"
-                     .format("date", "km", "time (m)", "pace (m)", "terrain", "elev (m)", "kcal"))
+TABLE_HEADING_STR = (" | {0:^12} | {1:^8} | {2:^8} | {3:^8} | {4:^23} | {5:^8}"
+                     .format("date", "km", "time (m)", "pace (m)", "terrain", "elev (m)"))
 
 
 def format_time_to_str(sec: int) -> str:
@@ -28,6 +28,18 @@ def date_str_to_datetime(date: str) -> datetime.date:
 
 def datetime_to_date_str(date: datetime.date) -> str:
     return f"{date.day:0>2}.{date.month:0>2}.{date.year:0>4}"
+
+
+def add_numbering(summary: str) -> str:
+    summary_lines = summary.split("\n")[:-1:]
+    summary_lines[0] = "   " + summary_lines[0]
+    summary_lines[1] = "---" + summary_lines[1]
+
+    for i, line in enumerate(summary_lines):
+        if i >= 2:
+            summary_lines[i] = "{0:>3}".format(i - 1) + line
+
+    return "\n".join(summary_lines)
 
 
 @dataclass
@@ -110,22 +122,21 @@ class RunningManager:
 
     def get_run_str(self, date: str) -> str:
         run = self[date]
-        s = "{0:>12} | {1:>5} km | {2:>8} | {3:>8} | {4:<30} | {5:>8} | {6:>8}"
+        s = " | {0:>12} | {1:>5} km | {2:>8} | {3:>8} | {4:<23} | {5:>8}"
         return s.format(run.date, run.kilometers, format_time_to_str(run.time), format_time_to_str(run.pace), run.terrain,
-                        run.elevation_gain if run.elevation_gain is not None else '-',
-                        run.calories if run.calories is not None else '-')
+                        run.elevation_gain if run.elevation_gain is not None else '-')
 
     def get_summary(self, last: int = 0) -> str:
-        summary = '\n' + self.get_table_heading() + '\n'
+        summary = self.get_table_heading() + '\n'
         for date in self.dates[-last:]:
             summary += self.get_run_str(date) + '\n'
-        return summary
+        return add_numbering(summary)
     
     def get_smart_summary(self, filter_type: str, filter_value: str, sort_key="date") -> str:
         if sort_key == "km":
-            key_func = lambda d: self.runs[d].kilometers
+            key_func = lambda d: -self.runs[d].kilometers
         elif sort_key == "pace":
-            key_func = lambda d: -self.runs[d].pace
+            key_func = lambda d: self.runs[d].pace
         elif sort_key == "date":
             key_func = lambda d: d
 
@@ -136,10 +147,10 @@ class RunningManager:
         elif filter_type == "km":
             filter_func = lambda d: str(round(self[d].kilometers))
 
-        summary = '\n' + self.get_table_heading() + '\n'
+        summary = self.get_table_heading() + '\n'
         for date in sorted(self.dates, key=key_func):
             if filter_func(date) == filter_value:
                 summary += self.get_run_str(date) + '\n'
-        return summary
+        return add_numbering(summary)
     
 
