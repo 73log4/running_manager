@@ -1,5 +1,5 @@
 import json
-from typing import *
+from typing import List, Dict
 from dataclasses import dataclass
 import math
 import datetime
