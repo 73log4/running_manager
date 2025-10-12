@@ -1,4 +1,4 @@
-from data_operations import RunningManager
+from manager_class import RunningManager
 from utils import *
 from input_checks import *
 import datetime
@@ -83,3 +83,8 @@ def print_smart_command(manager: RunningManager):
         return
 
     print(manager.get_smart_summary(filter_type, filter_value, sort_key))
+
+def week_report_command(manager: RunningManager):
+    last = input(MSG_ENTER_LAST_WEEKS)
+    last = int(last) if last != '' else 1
+    print(manager.get_week_summary(last))

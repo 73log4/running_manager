@@ -1,4 +1,4 @@
-from data_operations import RunningManager
+from manager_class import RunningManager
 from enum import Enum
 from commands import *
 from utils import *
@@ -13,6 +13,7 @@ class ManagerCMD(Enum):
     Backup = 4
     Delete = 5
     PrintSmart = 6,
+    WeekReport = 7,
 
 
 CMD_TABLE = {
@@ -22,7 +23,8 @@ CMD_TABLE = {
     "edit": ManagerCMD.Edit,
     "backup": ManagerCMD.Backup,
     "delete": ManagerCMD.Delete,
-    "print smart": ManagerCMD.PrintSmart,
+    "print-smart": ManagerCMD.PrintSmart,
+    "week-report": ManagerCMD.WeekReport,
 }
 
 
@@ -33,6 +35,7 @@ CMD_FUNC = {
     ManagerCMD.Backup: backup_command,
     ManagerCMD.Delete: delete_command,
     ManagerCMD.PrintSmart: print_smart_command,
+    ManagerCMD.WeekReport: week_report_command,
 }
 
 

@@ -1,4 +1,4 @@
-VERSION = "0.1.1"
+VERSION = "2.0"
 
 
 MSG_WELCOME = f"\n--- [ Welcome to the Running Manager {VERSION} ] ---"
@@ -7,12 +7,13 @@ MSG_CMD_TYPES = """
 Available commands:
 
 print       - print a specified number of last runs
+print-smart - print filtered and sorted runs
+week-report - print week report
 add         - add a new run
 edit        - edit a existing run
 delete      - delete a run
 backup      - create a backup
 exit        - exit the manager
-print smart - print filtered and sorted runs
 """
 MSG_ENTER_CMD = ">>> "
 MSG_INVALID_CMD = "invalid command. valid commands are: "
@@ -54,3 +55,5 @@ MSG_FILTER_TYPE_NOT_EXISTS = "filter type does not exist"
 MSG_ENTER_FILTER_VALUE = "enter filter value: "
 MSG_ENTER_SORT_KEY = "enter sort key (date/km/pace): "
 MSG_SORT_KEY_NOT_EXISTS = "sort key does not exist"
+
+MSG_ENTER_LAST_WEEKS = "enter number of last weeks to generate report: "
