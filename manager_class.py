@@ -157,7 +157,7 @@ class RunningManager:
         runs_in_week = [self.runs[d] for d in week_dates if d in self.runs]
 
         num_of_runs = len(runs_in_week)
-        week_map = ''.join('#' if week_dates[i] in self.runs else '-' for i in range(len(week_dates)))
+        week_map = ''.join('#' if week_dates[i] in self.runs else '-' for i in range(len(week_dates))) + '-' * (7 - len(week_dates))
         total_km = round(sum(r.kilometers for r in runs_in_week), 1)
         average_pace = format_time_to_str(round(sum(r.pace * r.kilometers for r in runs_in_week) / total_km)) if num_of_runs > 0 else '-'
         max_pace = format_time_to_str(min(r.pace for r in runs_in_week)) if num_of_runs > 0 else '-'
