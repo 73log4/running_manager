@@ -6,8 +6,12 @@ import datetime
 from date_manipulations import *
 
 
-RUNS_SUMMARY_HEADING = (" | {0:^12} | {1:^8} | {2:^8} | {3:^8} | {4:^23} | {5:^8}"
-                     .format("date", "km", "time (m)", "pace (m)", "terrain", "elev (m)"))
+MAX_PACE = 360  # 06:00 pace
+MIN_PACE = 180  # 03:00 pace
+
+
+RUNS_SUMMARY_HEADING = (" | {0:^12} | {1:^8} | {2:^8} | {3:^8} | {4:^20} | {5:^23} | {6:^8}"
+                     .format("date", "km", "time (m)", "pace (m)", "pace bar", "terrain", "elev (m)"))
 
 
 WEEKS_SUMMARY_HEADING = (" | {0:^23} | {1:^4} | {2:^9} | {3:^8} | {4:^10} | {5:^10} "
@@ -122,8 +126,13 @@ class RunningManager:
 
     def get_run_str(self, date: str) -> str:
         run = self[date]
-        s = " | {0:>12} | {1:>5} km | {2:>8} | {3:>8} | {4:<23} | {5:>8}"
-        return s.format(run.date, run.kilometers, format_time_to_str(run.time), format_time_to_str(run.pace), run.terrain,
+
+        rounded_pace = min(max(MIN_PACE, run.pace), MAX_PACE)
+        bar_unit = (MAX_PACE - MIN_PACE) / 20
+        pace_bar = "*" * round((rounded_pace - MIN_PACE) / bar_unit)
+
+        s = " | {0:>12} | {1:>5} km | {2:>8} | {3:>8} | {4:<20} | {5:<23} | {6:>8}"
+        return s.format(run.date, run.kilometers, format_time_to_str(run.time), format_time_to_str(run.pace), pace_bar, run.terrain,
                         run.elevation_gain if run.elevation_gain is not None else '-')
 
     def get_summary(self, last: int = 0) -> str:
@@ -157,7 +166,7 @@ class RunningManager:
         runs_in_week = [self.runs[d] for d in week_dates if d in self.runs]
 
         num_of_runs = len(runs_in_week)
-        week_map = ''.join('#' if week_dates[i] in self.runs else '-' for i in range(len(week_dates))) + '-' * (7 - len(week_dates))
+        week_map = ''.join('#' if week_dates[i] in self.runs else '-' for i in range(len(week_dates))) + ' ' * (7 - len(week_dates))
         total_km = round(sum(r.kilometers for r in runs_in_week), 1)
         average_pace = format_time_to_str(round(sum(r.pace * r.kilometers for r in runs_in_week) / total_km)) if num_of_runs > 0 else '-'
         max_pace = format_time_to_str(min(r.pace for r in runs_in_week)) if num_of_runs > 0 else '-'
