@@ -10,7 +10,7 @@ MAX_PACE = 360  # 06:00 pace
 MIN_PACE = 180  # 03:00 pace
 
 
-RUNS_SUMMARY_HEADING = (" | {0:^12} | {1:^8} | {2:^8} | {3:^8} | {4:^20} | {5:^23} | {6:^8}"
+RUNS_SUMMARY_HEADING = (" | {0:^12} | {1:^8} | {2:^8} | {3:^8} | {4:^12} | {5:^23} | {6:^8}"
                      .format("date", "km", "time (m)", "pace (m)", "pace bar", "terrain", "elev (m)"))
 
 
@@ -128,10 +128,10 @@ class RunningManager:
         run = self[date]
 
         rounded_pace = min(max(MIN_PACE, run.pace), MAX_PACE)
-        bar_unit = (MAX_PACE - MIN_PACE) / 20
+        bar_unit = (MAX_PACE - MIN_PACE) / 12
         pace_bar = "*" * round((rounded_pace - MIN_PACE) / bar_unit)
 
-        s = " | {0:>12} | {1:>5} km | {2:>8} | {3:>8} | {4:<20} | {5:<23} | {6:>8}"
+        s = " | {0:>12} | {1:>5} km | {2:>8} | {3:>8} | {4:<12} | {5:<23} | {6:>8}"
         return s.format(run.date, run.kilometers, format_time_to_str(run.time), format_time_to_str(run.pace), pace_bar, run.terrain,
                         run.elevation_gain if run.elevation_gain is not None else '-')
 
@@ -184,7 +184,3 @@ class RunningManager:
             summary += self.get_week_str(week) + '\n'
 
         return add_numbering(summary)
-
-
-    
-
