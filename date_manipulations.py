@@ -42,4 +42,10 @@ def last_weeks(n: int) -> List[List[str]]:
         for i in sorted(d.keys()):
             weeks.append(d[i])
 
+    # fix munday problem
+    for i in range(len(weeks) - 1):
+        weeks[i + 1].insert(0, weeks[i].pop())
+    if len(weeks[-1]) == 8:
+        weeks.append([weeks[-1].pop()]) 
+
     return weeks[-n:]
