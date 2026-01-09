@@ -1,4 +1,4 @@
-VERSION = "2.4.1"
+VERSION = "2.5.1"
 
 
 MSG_WELCOME = f"\n--- [ Welcome to the Running Manager {VERSION} ] ---"
@@ -6,14 +6,15 @@ MSG_WELCOME = f"\n--- [ Welcome to the Running Manager {VERSION} ] ---"
 MSG_CMD_TYPES = """
 Available commands:
 
-print       - print a specified number of last runs
-print-smart - print filtered and sorted runs
-week-report - print week report
-add         - add a new run
-edit        - edit a existing run
-delete      - delete a run
-backup      - create a backup
-exit        - exit the manager
+print         - print a specified number of last runs
+print-smart   - print filtered and sorted runs
+week-report   - print week report
+yearly-report - print yearly report
+add           - add a new run
+edit          - edit a existing run
+delete        - delete a run
+backup        - create a backup
+exit          - exit the manager
 """
 MSG_ENTER_CMD = ">>> "
 MSG_INVALID_CMD = "invalid command. valid commands are: "
@@ -57,3 +58,6 @@ MSG_ENTER_SORT_KEY = "enter sort key (date/km/pace): "
 MSG_SORT_KEY_NOT_EXISTS = "sort key does not exist"
 
 MSG_ENTER_LAST_WEEKS = "enter number of last weeks to generate report: "
+
+MSG_ENTER_YEAR = "enter year of report: "
+MSG_NOT_SUPPORTED_YEAR = "not supported year"

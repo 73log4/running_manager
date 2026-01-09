@@ -14,6 +14,7 @@ class ManagerCMD(Enum):
     Delete = 5
     PrintSmart = 6,
     WeekReport = 7,
+    YearlyReport = 8,
 
 
 CMD_TABLE = {
@@ -25,6 +26,7 @@ CMD_TABLE = {
     "delete": ManagerCMD.Delete,
     "print-smart": ManagerCMD.PrintSmart,
     "week-report": ManagerCMD.WeekReport,
+    "yearly-report": ManagerCMD.YearlyReport,
 }
 
 
@@ -36,6 +38,7 @@ CMD_FUNC = {
     ManagerCMD.Delete: delete_command,
     ManagerCMD.PrintSmart: print_smart_command,
     ManagerCMD.WeekReport: week_report_command,
+    ManagerCMD.YearlyReport: yearly_summary,
 }
 
 

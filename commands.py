@@ -88,3 +88,14 @@ def week_report_command(manager: RunningManager):
     last = input(MSG_ENTER_LAST_WEEKS)
     last = int(last) if last != '' else 1
     print(manager.get_week_summary(last))
+
+
+def yearly_summary(manager: RunningManager):
+    SUPPORTED_YEARS = ['2023', '2024', '2025', '2026']
+
+    year = input(MSG_ENTER_YEAR)
+    if year not in SUPPORTED_YEARS:
+        print(MSG_NOT_SUPPORTED_YEAR)
+        return
+    
+    print(manager.get_yearly_summary(int(year)))

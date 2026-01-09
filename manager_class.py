@@ -3,7 +3,7 @@ from typing import List, Dict
 from dataclasses import dataclass
 import math
 import datetime
-from date_manipulations import *
+from datetime_manipulations import *
 
 
 MAX_PACE = 360  # 06:00 pace
@@ -18,16 +18,20 @@ WEEKS_SUMMARY_HEADING = (" | {0:^23} | {1:^4} | {2:^9} | {3:^8} | {4:^10} | {5:^
                      .format("week", "runs", "map", "total km", "avrg pace", "max pace"))
 
 
-def format_time_to_str(sec: int) -> str:
-    hours = sec // 3600
-    minutes = (sec - 3600 * hours) // 60
-    seconds = sec - 3600 * hours - 60 * minutes
-    return f"{hours}:{minutes:0>2}:{seconds:0>2}"
+KM_CATEGORIES = ["1k", "3k", "5k", "10k", "10k+"]
 
 
-def format_str_to_time(time: str) -> int:
-    l = time.split(':')
-    return sum(60 ** i * int(l[-i - 1]) for i in range(len(l)))
+def run_km_category(km: float) -> str:
+    if km < 2:
+        return '1k'
+    elif 2 <= km < 4:
+        return '3k'
+    elif 4 <= km < 7:
+        return '5k'
+    elif 7 <= km < 12:
+        return '10k'
+    else:
+        return '10k+'
 
 
 def add_numbering(summary: str) -> str:
@@ -184,3 +188,70 @@ class RunningManager:
             summary += self.get_week_str(week) + '\n'
 
         return add_numbering(summary)
+    
+    def get_yearly_summary(self, year) -> str:
+        dates = [datetime_to_date_str(d) for d in days_in_year(year)]
+        runs = {d: self.runs[d] for d in dates if d in self.runs}
+        category_map = {d: run_km_category(runs[d].kilometers) for d in runs}
+
+        num_of_runs = len(runs)
+
+        total_km = round(sum(r.kilometers for r in runs.values()))
+
+        total_km_by_category = dict()
+        for c in KM_CATEGORIES:
+            runs_in_category = [r.kilometers for r in runs.values() if run_km_category(r.kilometers) == c]
+            if len(runs_in_category) == 0:
+                total_km_by_category[c] = None
+            else:
+                total_km_by_category[c] = round(sum(runs_in_category))
+
+        total_km_by_category_str = ""
+        for c in KM_CATEGORIES:
+            if total_km_by_category[c] == None:
+                total_km_by_category_str += f"{c:<4}: -\n"
+            else:
+                total_km_by_category_str += f"{c:<4}: {total_km_by_category[c]} km\n"
+        
+        best_run_by_category = dict()
+        for c in KM_CATEGORIES:
+            runs_in_category = [r for r in runs.values() if run_km_category(r.kilometers) == c]
+            if len(runs_in_category) == 0:
+                best_run_by_category[c] = None
+            else:
+                best_run_by_category[c] =  min(runs_in_category, key=lambda x: x.pace)
+
+        best_run_by_category_str = ""
+        for c in KM_CATEGORIES:
+            r = best_run_by_category[c]
+            if r != None:
+                best_run_by_category_str += f"{c:<4}: {r.date} - {r.terrain:<16} - {format_time_to_str(r.pace)} /km\n"
+            else:
+                best_run_by_category_str += f"{c:<4}: -\n"
+
+
+        longest_run = sorted(runs.values(), key=lambda r: r.kilometers)[-1]
+
+        largest_climb_run = sorted(runs.values(), key=lambda r: r.elevation_gain if r.elevation_gain != None else -1)[-1]
+
+
+        report = \
+        f"""
+--- [{year} yearly report] ---
+
+total number of runs: {num_of_runs}
+
+total km: {total_km} km
+
+total km by category: \n{total_km_by_category_str}
+best run by category: \n{best_run_by_category_str}
+longest run: {longest_run.date} - {longest_run.kilometers} km
+
+largest climb: {largest_climb_run.date} - {largest_climb_run.elevation_gain} m
+
+"""
+
+        return report
+
+
+

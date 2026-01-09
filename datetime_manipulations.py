@@ -6,6 +6,18 @@ from typing import List, Dict, Tuple
 START_YEAR = 2023
 
 
+def format_time_to_str(sec: int) -> str:
+    hours = sec // 3600
+    minutes = (sec - 3600 * hours) // 60
+    seconds = sec - 3600 * hours - 60 * minutes
+    return f"{hours}:{minutes:0>2}:{seconds:0>2}"
+
+
+def format_str_to_time(time: str) -> int:
+    l = time.split(':')
+    return sum(60 ** i * int(l[-i - 1]) for i in range(len(l)))
+
+
 def date_str_to_datetime(date: str) -> datetime.date:
     d, m, y = map(int, date.split('.'))
     return datetime.date(y, m, d)
