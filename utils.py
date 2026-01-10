@@ -1,20 +1,24 @@
-VERSION = "2.5.1"
+VERSION = "2.5.3"
 
 
-MSG_WELCOME = f"\n--- [ Welcome to the Running Manager {VERSION} ] ---"
+MSG_WELCOME = f"""
+\n--- [ Welcome to the Running Manager {VERSION} ] ---
 
-MSG_CMD_TYPES = """
+To enter a command enter its number or the entire name.
+"""
+
+MSG_CMD_TYPES = f"""
 Available commands:
 
-print         - print a specified number of last runs
-print-smart   - print filtered and sorted runs
-week-report   - print week report
-yearly-report - print yearly report
-add           - add a new run
-edit          - edit a existing run
-delete        - delete a run
-backup        - create a backup
-exit          - exit the manager
+1. print ........... print a specified number of last runs
+2. print-smart ..... print filtered and sorted runs
+3. week-report ..... print week report
+4. yearly-report ... print yearly report
+5. add ............. add a new run
+6. edit ............ edit a existing run
+7. delete .......... delete a run
+8. backup .......... create a backup
+9. exit ............ exit the manager
 """
 MSG_ENTER_CMD = ">>> "
 MSG_INVALID_CMD = "invalid command. valid commands are: "
@@ -30,7 +34,7 @@ MSG_INVALID_TIME = "invalid time"
 MSG_ENTER_KILOMETERS = "enter kilometers (km): "
 MSG_INVALID_KILOMETERS = ""
 
-MSG_ENTER_TERRAIN = "enter terrain: "
+MSG_ENTER_TERRAIN = "enter location: "
 MSG_INVALID_TERRAIN = ""
 
 MSG_ENTER_ELEVATION = "enter elevation gain (m): "

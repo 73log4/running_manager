@@ -11,7 +11,7 @@ MIN_PACE = 180  # 03:00 pace
 
 
 RUNS_SUMMARY_HEADING = (" | {0:^12} | {1:^8} | {2:^8} | {3:^8} | {4:^12} | {5:^23} | {6:^8}"
-                     .format("date", "km", "time (m)", "pace (m)", "pace bar", "terrain", "elev (m)"))
+                     .format("date", "km", "time (m)", "pace (m)", "pace bar", "location", "elev (m)"))
 
 
 WEEKS_SUMMARY_HEADING = (" | {0:^23} | {1:^4} | {2:^9} | {3:^8} | {4:^10} | {5:^10} "
@@ -90,7 +90,7 @@ class RunningManager:
                 "kilometers": r.kilometers,
                 "time": r.time,
                 "pace": r.pace,
-                "terrain": r.terrain,
+                "location": r.terrain,
                 "elevation_gain": r.elevation_gain,
                 "calories": r.calories,
             }
@@ -225,7 +225,7 @@ class RunningManager:
         for c in KM_CATEGORIES:
             r = best_run_by_category[c]
             if r != None:
-                best_run_by_category_str += f"{c:<4}: {r.date} - {r.terrain:<16} - {format_time_to_str(r.pace)} /km\n"
+                best_run_by_category_str += f"{c:<4}: {r.date} - {r.terrain:<16} - {format_time_to_str(r.pace)} / km\n"
             else:
                 best_run_by_category_str += f"{c:<4}: -\n"
 
@@ -241,9 +241,9 @@ class RunningManager:
 
 total number of runs: {num_of_runs}
 
-total km: {total_km} km
+total kilometers: {total_km} km
 
-total km by category: \n{total_km_by_category_str}
+total kilometers by category: \n{total_km_by_category_str}
 best run by category: \n{best_run_by_category_str}
 longest run: {longest_run.date} - {longest_run.kilometers} km
 

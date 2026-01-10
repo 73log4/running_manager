@@ -6,15 +6,15 @@ from utils import *
 
 class ManagerCMD(Enum):
     Error = -1
-    Exit = 0
+    Exit = 9
     Print = 1
-    Add = 2
-    Edit = 3
-    Backup = 4
-    Delete = 5
-    PrintSmart = 6,
-    WeekReport = 7,
-    YearlyReport = 8,
+    Add = 5
+    Edit = 6
+    Backup = 8
+    Delete = 7
+    PrintSmart = 2
+    WeekReport = 3
+    YearlyReport = 4
 
 
 CMD_TABLE = {
@@ -44,6 +44,14 @@ CMD_FUNC = {
 
 def get_command() -> ManagerCMD:
     cmd = input(MSG_ENTER_CMD)
+
+    if cmd.isdecimal():
+        cmd_int = int(cmd)
+        if 0 < cmd_int < len(ManagerCMD):
+            return ManagerCMD(cmd_int)
+        else:
+            return ManagerCMD.Error
+
     return CMD_TABLE.get(cmd, ManagerCMD.Error)
 
 
