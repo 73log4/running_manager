@@ -52,7 +52,7 @@ class Run:
     kilometers: float
     time: int
     pace: int
-    terrain: str
+    location: str
     elevation_gain: int
     calories: float
 
@@ -70,7 +70,7 @@ class RunningManager:
     @staticmethod
     def load_running_data():
         with open("running_times.json", "r") as running_times:
-            return [Run(r["date"], r["kilometers"], r["time"], r["pace"], r["terrain"], r["elevation_gain"],
+            return [Run(r["date"], r["kilometers"], r["time"], r["pace"], r["location"], r["elevation_gain"],
                         r["calories"]) for r in json.load(running_times)]
 
     @staticmethod
@@ -90,7 +90,7 @@ class RunningManager:
                 "kilometers": r.kilometers,
                 "time": r.time,
                 "pace": r.pace,
-                "location": r.terrain,
+                "location": r.location,
                 "elevation_gain": r.elevation_gain,
                 "calories": r.calories,
             }
@@ -107,12 +107,12 @@ class RunningManager:
         backup_path = f"backups/running_times_backup_{datetime.date.today()}.json"
         self.save_changes(backup_path)
 
-    def add_run(self, date: str, km: float, time: str, terrain: str, elev: int):
+    def add_run(self, date: str, km: float, time: str, location: str, elev: int):
         new_time = format_str_to_time(time)
         pace = math.ceil(new_time / km)
         calories = -1
 
-        run = Run(date, km, new_time, pace, terrain, elev, calories)
+        run = Run(date, km, new_time, pace, location, elev, calories)
 
         self.runs[run.date] = run
         if date not in self.dates:
@@ -136,7 +136,7 @@ class RunningManager:
         pace_bar = "*" * round((rounded_pace - MIN_PACE) / bar_unit)
 
         s = " | {0:>12} | {1:>5} km | {2:>8} | {3:>8} | {4:<12} | {5:<23} | {6:>8}"
-        return s.format(run.date, run.kilometers, format_time_to_str(run.time), format_time_to_str(run.pace), pace_bar, run.terrain,
+        return s.format(run.date, run.kilometers, format_time_to_str(run.time), format_time_to_str(run.pace), pace_bar, run.location,
                         run.elevation_gain if run.elevation_gain is not None else '-')
 
     def get_summary(self, last: int = 0) -> str:
@@ -156,7 +156,7 @@ class RunningManager:
         if filter_type == "none":
             filter_func = lambda d: "none"
         if filter_type == "location":
-            filter_func = lambda d: self[d].terrain
+            filter_func = lambda d: self[d].location
         elif filter_type == "km":
             filter_func = lambda d: str(round(self[d].kilometers))
 
@@ -225,7 +225,7 @@ class RunningManager:
         for c in KM_CATEGORIES:
             r = best_run_by_category[c]
             if r != None:
-                best_run_by_category_str += f"{c:<4}: {r.date} - {r.terrain:<16} - {format_time_to_str(r.pace)} / km\n"
+                best_run_by_category_str += f"{c:<4}: {r.date} - {r.location:<16} - {format_time_to_str(r.pace)} / km\n"
             else:
                 best_run_by_category_str += f"{c:<4}: -\n"
 
@@ -252,6 +252,3 @@ largest climb: {largest_climb_run.date} - {largest_climb_run.elevation_gain} m
 """
 
         return report
-
-
-

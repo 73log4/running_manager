@@ -14,7 +14,7 @@ def add_command(manager: RunningManager, edit=False):
     if not valid_time(time):
         print(MSG_INVALID_TIME)
         return
-    terrain = input(MSG_ENTER_TERRAIN)
+    location = input(MSG_ENTER_TERRAIN)
     elev = int(input(MSG_ENTER_ELEVATION))
 
     if edit:
@@ -30,7 +30,7 @@ def add_command(manager: RunningManager, edit=False):
             print(MSG_RUN_EXISTS)
             return
 
-    manager.add_run(date, km, time, terrain, elev)
+    manager.add_run(date, km, time, location, elev)
 
     if edit:
         print(MSG_EDIT_SUCCESS)
