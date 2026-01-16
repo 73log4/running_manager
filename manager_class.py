@@ -6,8 +6,8 @@ import datetime
 from datetime_manipulations import *
 
 
-MAX_PACE = 360  # 06:00 pace
-MIN_PACE = 180  # 03:00 pace
+MAX_PACE = 360  # 06:00 pace (am sorry for all the old dudes)
+MIN_PACE = 150  # 02:30 pace
 
 
 RUNS_SUMMARY_HEADING = (" | {0:^12} | {1:^8} | {2:^8} | {3:^8} | {4:^12} | {5:^23} | {6:^8}"
@@ -18,6 +18,7 @@ WEEKS_SUMMARY_HEADING = (" | {0:^23} | {1:^4} | {2:^9} | {3:^8} | {4:^10} | {5:^
                      .format("week", "runs", "map", "total km", "avrg pace", "max pace"))
 
 
+# TODO: add more categories
 KM_CATEGORIES = ["1k", "3k", "5k", "10k", "10k+"]
 
 
@@ -35,6 +36,7 @@ def run_km_category(km: float) -> str:
 
 
 def add_numbering(summary: str) -> str:
+    """ Adds numbering to a summary (that includes a heading). """
     summary_lines = summary.split("\n")[:-1:]
     summary_lines[0] = "   " + summary_lines[0]
     summary_lines[1] = "---" + summary_lines[1]
@@ -48,13 +50,12 @@ def add_numbering(summary: str) -> str:
 
 @dataclass
 class Run:
-    date: str
+    date: str            # dd.mm.yyyy format
     kilometers: float
-    time: int
-    pace: int
+    time: int            # in sec
+    pace: int            # in sec/km
     location: str
-    elevation_gain: int
-    calories: float
+    elevation_gain: int  # in mtrs
 
 
 class RunningManager:
@@ -70,8 +71,7 @@ class RunningManager:
     @staticmethod
     def load_running_data():
         with open("running_times.json", "r") as running_times:
-            return [Run(r["date"], r["kilometers"], r["time"], r["pace"], r["location"], r["elevation_gain"],
-                        r["calories"]) for r in json.load(running_times)]
+            return [Run(r["date"], r["kilometers"], r["time"], r["pace"], r["location"], r["elevation_gain"]) for r in json.load(running_times)]
 
     @staticmethod
     def get_runs_table_heading() -> str:
@@ -92,7 +92,6 @@ class RunningManager:
                 "pace": r.pace,
                 "location": r.location,
                 "elevation_gain": r.elevation_gain,
-                "calories": r.calories,
             }
             data.append(run_dict)
         with open(file_path, "w") as running_times:
@@ -110,9 +109,8 @@ class RunningManager:
     def add_run(self, date: str, km: float, time: str, location: str, elev: int):
         new_time = format_str_to_time(time)
         pace = math.ceil(new_time / km)
-        calories = -1
 
-        run = Run(date, km, new_time, pace, location, elev, calories)
+        run = Run(date, km, new_time, pace, location, elev)
 
         self.runs[run.date] = run
         if date not in self.dates:
@@ -129,6 +127,7 @@ class RunningManager:
         self.save_changes()
 
     def get_run_str(self, date: str) -> str:
+        """ Returns a str representign the run, used for 'print' and 'print-smart' commands """
         run = self[date]
 
         rounded_pace = min(max(MIN_PACE, run.pace), MAX_PACE)
@@ -140,12 +139,18 @@ class RunningManager:
                         run.elevation_gain if run.elevation_gain is not None else '-')
 
     def get_summary(self, last: int = 0) -> str:
+        """ Returns a table of last runs. """
         summary = self.get_runs_table_heading() + '\n'
         for date in self.dates[-last:]:
             summary += self.get_run_str(date) + '\n'
         return add_numbering(summary)
     
     def get_smart_summary(self, filter_type: str, filter_value: str, sort_key="date") -> str:
+        """ 
+        Returns a table of last runs filtered and sorted. 
+        Filter types: km, pace, date. 
+        Sort types: none (all), pace, date. 
+        """
         if sort_key == "km":
             key_func = lambda d: -self.runs[d].kilometers
         elif sort_key == "pace":
@@ -167,6 +172,7 @@ class RunningManager:
         return add_numbering(summary)
     
     def get_week_str(self, week_dates: List[str]) -> str:
+        """ Returns a str summarizing the week. """
         runs_in_week = [self.runs[d] for d in week_dates if d in self.runs]
 
         num_of_runs = len(runs_in_week)
@@ -181,6 +187,7 @@ class RunningManager:
         return week_summary
         
     def get_week_summary(self, last) -> str:
+        """ Returns a table of last weeks. """
         weeks = last_weeks(last)
 
         summary = self.get_weeks_table_heading() + '\n'

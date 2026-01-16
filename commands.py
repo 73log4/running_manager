@@ -5,6 +5,7 @@ import datetime
 
 
 def add_command(manager: RunningManager, edit=False):
+    """ Add run. """
     date = input(MSG_ENTER_DATE)
     if not valid_date(date):
         print(MSG_INVALID_DATE)
@@ -39,20 +40,24 @@ def add_command(manager: RunningManager, edit=False):
 
 
 def edit_command(manager: RunningManager):
+    """ Edit a run. """
     add_command(manager, edit=True)
 
 
 def print_command(manager: RunningManager):
+    """ Print number of last runs """
     last = input(MSG_ENTER_LAST)
     last = int(last) if last != '' else 0
     print(manager.get_summary(last))
 
 
 def backup_command(manager: RunningManager):
+    """ Create a backup .json file of all runs. """
     manager.create_backup()
     print(MSG_BACKUP + f"{datetime.date.today()}.json")
 
 def delete_command(manager: RunningManager):
+    """ Delete a run """
     date = input(MSG_ENTER_DATE)
     if not valid_date(date):
         print(MSG_INVALID_DATE)
@@ -67,6 +72,7 @@ def delete_command(manager: RunningManager):
     print(MSG_DELETE_SUCCESS)
 
 def print_smart_command(manager: RunningManager):
+    """ Print runs usinf filters and sorting by different measures. """
     filter_type = input(MSG_ENTER_FILTER_TYPE)
     if filter_type not in ["km", "location", "none"]:
         print(MSG_FILTER_TYPE_NOT_EXISTS)
@@ -85,12 +91,14 @@ def print_smart_command(manager: RunningManager):
     print(manager.get_smart_summary(filter_type, filter_value, sort_key))
 
 def week_report_command(manager: RunningManager):
+    """ Prints a weekly report of last weeks. """
     last = input(MSG_ENTER_LAST_WEEKS)
     last = int(last) if last != '' else 1
     print(manager.get_week_summary(last))
 
 
 def yearly_summary(manager: RunningManager):
+    """ Prints a yearly summary. """
     SUPPORTED_YEARS = ['2023', '2024', '2025', '2026']
 
     year = input(MSG_ENTER_YEAR)

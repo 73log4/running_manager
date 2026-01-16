@@ -4,6 +4,7 @@ from commands import *
 from utils import *
 
 
+# Possible commands
 class ManagerCMD(Enum):
     Error = -1
     Exit = 9
@@ -17,6 +18,7 @@ class ManagerCMD(Enum):
     YearlyReport = 4
 
 
+# Command names
 CMD_TABLE = {
     "exit": ManagerCMD.Exit,
     "print": ManagerCMD.Print,
@@ -30,6 +32,7 @@ CMD_TABLE = {
 }
 
 
+# Functions to be called for each command
 CMD_FUNC = {
     ManagerCMD.Print: print_command,
     ManagerCMD.Add: add_command,
@@ -43,6 +46,7 @@ CMD_FUNC = {
 
 
 def get_command() -> ManagerCMD:
+    """ Asks user for command and returns a appropriate ManagerCMD object. """
     cmd = input(MSG_ENTER_CMD)
 
     if cmd.isdecimal():
@@ -56,6 +60,7 @@ def get_command() -> ManagerCMD:
 
 
 def run_manager():
+    """ Main loop. """
     manager = RunningManager()
     command = ManagerCMD.Print
 
