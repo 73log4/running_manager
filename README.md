@@ -20,10 +20,10 @@ Each run saved in the manager will contain the following entries:
 ## Screenshots
 
 Welcome message:
-![welcome screen](screenshots\welcome.png)
+![welcome screen](screenshots/welcome.png)
 
 Weekly report:
-![weekly report](screenshots\weekly_report.png)
+![weekly report](screenshots/weekly_report.png)
 
 Yearly report
-![yearly report](screenshots\yearly_report.png)
+![yearly report](screenshots/yearly_report.png)
