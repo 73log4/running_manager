@@ -2,6 +2,8 @@
 
 A lite terminal app to save and analyze you runs.
 
+Run the running_manager.py file to run the program.
+
 ## Main Features
 - Saving runs - save your run stats to a local file.
 - Display results - show your runs filtered by categories and sorted by different meaasures (for example show all 2km runs sorted by best pace)
@@ -9,11 +11,11 @@ A lite terminal app to save and analyze you runs.
 
 ## Run data
 Each run saved in the manager will contain the following entries:
-- date (in dd.mm.yyyy foramt)
-- kilometers
-- time (in hh:mm:ss format)
-- location
-- elevation (in meters)
+- Date (in dd.mm.yyyy foramt)
+- Kilometers
+- Time (in hh:mm:ss format)
+- Location
+- Elevation (in meters)
 
 ## Screenshots
 
