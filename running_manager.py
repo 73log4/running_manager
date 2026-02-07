@@ -6,6 +6,7 @@ from utils import *
 
 # Possible commands
 class ManagerCMD(Enum):
+    Menu = 0
     Error = -1
     Exit = 9
     Print = 1
@@ -20,6 +21,7 @@ class ManagerCMD(Enum):
 
 # Command names
 CMD_TABLE = {
+    "menu": ManagerCMD.Menu,
     "exit": ManagerCMD.Exit,
     "print": ManagerCMD.Print,
     "add": ManagerCMD.Add,
@@ -34,6 +36,7 @@ CMD_TABLE = {
 
 # Functions to be called for each command
 CMD_FUNC = {
+    ManagerCMD.Menu: print_menu,
     ManagerCMD.Print: print_command,
     ManagerCMD.Add: add_command,
     ManagerCMD.Edit: edit_command,

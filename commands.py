@@ -4,6 +4,10 @@ from input_checks import *
 import datetime
 
 
+def print_menu(manager: RunningManager):
+    print(MSG_CMD_TYPES)
+
+
 def add_command(manager: RunningManager, edit=False):
     """ Add run. """
     date = input(MSG_ENTER_DATE)
