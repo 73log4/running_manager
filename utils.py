@@ -65,3 +65,5 @@ MSG_ENTER_LAST_WEEKS = "enter number of last weeks to generate report: "
 
 MSG_ENTER_YEAR = "enter year of report: "
 MSG_NOT_SUPPORTED_YEAR = "not supported year"
+
+MSG_OLD_DATE_WARNING = "the above date is considered old, are you sure it's not a typo (y/n)? "

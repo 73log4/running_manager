@@ -5,6 +5,9 @@ from typing import List, Dict, Tuple
 
 START_YEAR = 2023
 
+# number of days from today from which a user error is assumed (like year typo)
+OLD_DATE = 7
+
 
 def format_time_to_str(sec: int) -> str:
     """ formats seconds to hh:mm:ss """
@@ -78,5 +81,10 @@ def last_weeks(n: int) -> List[List[str]]:
     if len(weeks[-1]) == 8:
         weeks.append([weeks[-1].pop()])
 
-
     return weeks[-n:]
+
+def is_date_old(d: str) -> bool:
+    """ Return True if date is considert old (and so a typo) """
+    today = datetime.datetime.now().date()
+    d = date_str_to_datetime(d)
+    return (today - d).days > OLD_DATE

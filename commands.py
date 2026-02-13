@@ -2,6 +2,7 @@ from manager_class import RunningManager
 from utils import *
 from input_checks import *
 import datetime
+from datetime_manipulations import is_date_old
 
 
 def print_menu(manager: RunningManager):
@@ -14,6 +15,11 @@ def add_command(manager: RunningManager, edit=False):
     if not valid_date(date):
         print(MSG_INVALID_DATE)
         return
+    elif is_date_old(date):
+        check = input(MSG_OLD_DATE_WARNING)
+        if check != 'y':
+            print(MSG_EDIT_NO_CHANGE)
+            return
     km = float(input(MSG_ENTER_KILOMETERS))
     time = input(MSG_ENTER_TIME)
     if not valid_time(time):
