@@ -4,9 +4,14 @@ from dataclasses import dataclass
 import math
 import datetime
 from datetime_manipulations import *
+import os
 
 
-MAX_PACE = 360  # 06:00 pace (am sorry for all the old dudes)
+JSON_PATH = os.path.dirname(__file__) + "/running_times.json"
+BACKUP_PATH = os.path.dirname(__file__) + "/backups"
+
+
+MAX_PACE = 360  # 06:00 pace (I am sorry for all the old dudes)
 MIN_PACE = 150  # 02:30 pace
 
 
@@ -70,7 +75,7 @@ class RunningManager:
 
     @staticmethod
     def load_running_data():
-        with open("running_times.json", "r") as running_times:
+        with open(JSON_PATH, "r") as running_times:
             return [Run(r["date"], r["kilometers"], r["time"], r["pace"], r["location"], r["elevation_gain"]) for r in json.load(running_times)]
 
     @staticmethod
@@ -81,7 +86,7 @@ class RunningManager:
     def get_weeks_table_heading() -> str:
         return WEEKS_SUMMARY_HEADING+ '\n' + '-' * len(WEEKS_SUMMARY_HEADING)
 
-    def save_changes(self, file_path: str = "running_times.json"):
+    def save_changes(self, file_path: str = JSON_PATH):
         data = []
         for d in self.dates:
             r = self[d]
@@ -103,7 +108,7 @@ class RunningManager:
         self.dates = list(map(datetime_to_date_str, new_dates))
 
     def create_backup(self):
-        backup_path = f"backups/running_times_backup_{datetime.date.today()}.json"
+        backup_path = f"{BACKUP_PATH}/running_times_backup_{datetime.date.today()}.json"
         self.save_changes(backup_path)
 
     def add_run(self, date: str, km: float, time: str, location: str, elev: int):

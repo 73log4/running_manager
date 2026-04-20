@@ -84,7 +84,7 @@ def last_weeks(n: int) -> List[List[str]]:
     return weeks[-n:]
 
 def is_date_old(d: str) -> bool:
-    """ Return True if date is considert old (and so a typo) """
+    """ Return True if date is considert old (and so may be a typo) """
     today = datetime.datetime.now().date()
     d = date_str_to_datetime(d)
     return (today - d).days > OLD_DATE
