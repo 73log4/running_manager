@@ -11,6 +11,15 @@ def print_menu(manager: RunningManager):
 
 def add_command(manager: RunningManager, edit=False):
     """ Add run. """
+
+    is_intervals = False
+    is_intervals_input = input(MSG_IS_INTERVALS)
+    if is_intervals_input == 'y':
+        print(MSG_ADDING_INTERVALS)
+        is_intervals = True
+    else:
+        print(MSG_ADDING_NORMAL_RUN)
+
     date = input(MSG_ENTER_DATE)
     if not valid_date(date):
         print(MSG_INVALID_DATE)
@@ -25,8 +34,15 @@ def add_command(manager: RunningManager, edit=False):
     if not valid_time(time):
         print(MSG_INVALID_TIME)
         return
-    location = input(MSG_ENTER_TERRAIN)
-    elev = int(input(MSG_ENTER_ELEVATION))
+
+    if not is_intervals:
+        location = input(MSG_ENTER_TERRAIN)
+        elev = int(input(MSG_ENTER_ELEVATION))
+        intervals = 0
+    else:
+        intervals = int(input(MSG_ENTER_INTERVALS_REPS))
+        location = f"intervals ({intervals} reps)"
+        elev = 0
 
     if edit:
         if date not in manager.dates:
@@ -41,7 +57,7 @@ def add_command(manager: RunningManager, edit=False):
             print(MSG_RUN_EXISTS)
             return
 
-    manager.add_run(date, km, time, location, elev)
+    manager.add_run(date, km, time, location, elev, intervals)
 
     if edit:
         print(MSG_EDIT_SUCCESS)

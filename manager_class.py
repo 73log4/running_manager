@@ -15,7 +15,7 @@ MAX_PACE = 360  # 06:00 pace (I am sorry for all the old dudes)
 MIN_PACE = 150  # 02:30 pace
 
 
-RUNS_SUMMARY_HEADING = (" | {0:^12} | {1:^8} | {2:^8} | {3:^8} | {4:^12} | {5:^23} | {6:^8}"
+RUNS_SUMMARY_HEADING = (" | {0:^12} | {1:^10} | {2:^8} | {3:^8} | {4:^12} | {5:^23} | {6:^8}"
                      .format("date", "km", "time (m)", "pace (m)", "pace bar", "location", "elev (m)"))
 
 
@@ -61,6 +61,10 @@ class Run:
     pace: int            # in sec/km
     location: str
     elevation_gain: int  # in mtrs
+    intervals: int  # 0 for normal run, for intervals the number of reps
+
+    def is_intervals(self):
+        return self.intervals != 0
 
 
 class RunningManager:
@@ -76,7 +80,8 @@ class RunningManager:
     @staticmethod
     def load_running_data():
         with open(JSON_PATH, "r") as running_times:
-            return [Run(r["date"], r["kilometers"], r["time"], r["pace"], r["location"], r["elevation_gain"]) for r in json.load(running_times)]
+            # TODO
+            return [Run(r["date"], r["kilometers"], r["time"], r["pace"], r["location"], r["elevation_gain"], r["intervals"]) for r in json.load(running_times)]
 
     @staticmethod
     def get_runs_table_heading() -> str:
@@ -97,6 +102,7 @@ class RunningManager:
                 "pace": r.pace,
                 "location": r.location,
                 "elevation_gain": r.elevation_gain,
+                "intervals": r.intervals,
             }
             data.append(run_dict)
         with open(file_path, "w") as running_times:
@@ -111,11 +117,11 @@ class RunningManager:
         backup_path = f"{BACKUP_PATH}/running_times_backup_{datetime.date.today()}.json"
         self.save_changes(backup_path)
 
-    def add_run(self, date: str, km: float, time: str, location: str, elev: int):
+    def add_run(self, date: str, km: float, time: str, location: str, elev: int, intervals: int = 0):
         new_time = format_str_to_time(time)
         pace = math.ceil(new_time / km)
 
-        run = Run(date, km, new_time, pace, location, elev)
+        run = Run(date, km, new_time, pace, location, elev, intervals)
 
         self.runs[run.date] = run
         if date not in self.dates:
@@ -132,15 +138,17 @@ class RunningManager:
         self.save_changes()
 
     def get_run_str(self, date: str) -> str:
-        """ Returns a str representign the run, used for 'print' and 'print-smart' commands """
+        """ Returns a str representation the run, used for 'print' and 'print-smart' commands """
         run = self[date]
 
         rounded_pace = min(max(MIN_PACE, run.pace), MAX_PACE)
         bar_unit = (MAX_PACE - MIN_PACE) / 12
         pace_bar = "*" * round((rounded_pace - MIN_PACE) / bar_unit)
 
-        s = " | {0:>12} | {1:>5} km | {2:>8} | {3:>8} | {4:<12} | {5:<23} | {6:>8}"
-        return s.format(run.date, run.kilometers, format_time_to_str(run.time), format_time_to_str(run.pace), pace_bar, run.location,
+        km = run.kilometers if run.intervals == 0 else f"{round(run.kilometers / run.intervals, 2)}x{run.intervals}"
+
+        s = " | {0:>12} | {1:>7} km | {2:>8} | {3:>8} | {4:<12} | {5:<23} | {6:>8}"
+        return s.format(run.date, km, format_time_to_str(run.time), format_time_to_str(run.pace), pace_bar, run.location,
                         run.elevation_gain if run.elevation_gain is not None else '-')
 
     def get_summary(self, last: int = 0) -> str:
@@ -227,7 +235,7 @@ class RunningManager:
         
         best_run_by_category = dict()
         for c in KM_CATEGORIES:
-            runs_in_category = [r for r in runs.values() if run_km_category(r.kilometers) == c]
+            runs_in_category = [r for r in runs.values() if run_km_category(r.kilometers) == c and not r.is_intervals()]
             if len(runs_in_category) == 0:
                 best_run_by_category[c] = None
             else:

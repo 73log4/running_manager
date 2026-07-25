@@ -67,3 +67,8 @@ MSG_ENTER_YEAR = "enter year of report: "
 MSG_NOT_SUPPORTED_YEAR = "not supported year"
 
 MSG_OLD_DATE_WARNING = "the above date is considered old, are you sure it's not a typo (y/n)? "
+
+MSG_IS_INTERVALS = "is intervals (y/n)? "
+MSG_ADDING_INTERVALS = "adding intervals session\n"
+MSG_ADDING_NORMAL_RUN = "adding normal running session (not intervals)\n"
+MSG_ENTER_INTERVALS_REPS = "enter number of repetitions (intervals): "
